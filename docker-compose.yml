@@ -1,0 +1,17 @@
+services:
+  be-anis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: be-anis-api
+    env_file:
+      - .env
+    environment:
+      PORT: "5589"
+      APP_BASE_URL: "http://localhost:5589"
+      UPLOAD_DIR: "/app/uploads/img"
+    ports:
+      - "5589:5589"
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped

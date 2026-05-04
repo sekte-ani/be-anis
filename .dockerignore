@@ -1,0 +1,10 @@
+.git
+.gitignore
+.claude
+.DS_Store
+
+.env
+
+uploads
+
+README.md
