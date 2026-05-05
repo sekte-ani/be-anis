@@ -10,11 +10,12 @@ type Env struct {
 	SupabaseURL        string
 	SupabaseAnonKey    string
 	SupabaseServiceKey string
-	OpenAIAPIKey        string
+	OpenAIAPIKey       string
 	EmbeddingServiceURL string
-	AppBaseURL          string
-	UploadDir           string
-	Port                string
+	AppBaseURL         string
+	UploadDir          string
+	UploadPublicPath   string
+	Port               string
 }
 
 func LoadEnv() (*Env, error) {
@@ -28,6 +29,7 @@ func LoadEnv() (*Env, error) {
 		EmbeddingServiceURL: getEnvOrDefault("EMBEDDING_SERVICE_URL", "http://localhost:8000"),
 		AppBaseURL:          getEnvOrDefault("APP_BASE_URL", "https://anismockup.anitech.id"),
 		UploadDir:           getEnvOrDefault("UPLOAD_DIR", "./uploads/img"),
+		UploadPublicPath:    getEnvOrDefault("UPLOAD_PUBLIC_PATH", "/img"),
 		Port:                getEnvOrDefault("PORT", "5589"),
 	}
 

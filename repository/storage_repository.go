@@ -22,14 +22,17 @@ type StorageRepository interface {
 }
 
 type storageRepository struct {
-	uploadDir  string
-	appBaseURL string
+	uploadDir        string
+	appBaseURL       string
+	uploadPublicPath string
 }
 
-func NewStorageRepository(uploadDir, appBaseURL string) StorageRepository {
+func NewStorageRepository(uploadDir, appBaseURL, uploadPublicPath string) StorageRepository {
+	uploadPublicPath = "/" + strings.Trim(strings.TrimSpace(uploadPublicPath), "/")
 	return &storageRepository{
-		uploadDir:  uploadDir,
-		appBaseURL: strings.TrimRight(appBaseURL, "/"),
+		uploadDir:        uploadDir,
+		appBaseURL:       strings.TrimRight(appBaseURL, "/"),
+		uploadPublicPath: uploadPublicPath,
 	}
 }
 
@@ -83,6 +86,6 @@ func (r *storageRepository) SaveImage(file *multipart.FileHeader) (string, error
 		}
 	}
 
-	publicURL := fmt.Sprintf("%s/img/%s", r.appBaseURL, filename)
+	publicURL := fmt.Sprintf("%s%s/%s", r.appBaseURL, r.uploadPublicPath, filename)
 	return publicURL, nil
 }

@@ -10,6 +10,7 @@ services:
       PORT: "5589"
       APP_BASE_URL: "${APP_BASE_URL}"
       UPLOAD_DIR: "/app/uploads/img"
+      UPLOAD_PUBLIC_PATH: "${UPLOAD_PUBLIC_PATH:-/img}"
     ports:
       - "5589:5589"
     volumes:

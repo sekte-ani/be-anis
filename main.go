@@ -30,13 +30,21 @@ func main() {
 	mockRepo := repository.NewMockRepository(clients)
 	openAIRepo := repository.NewOpenAIRepository(env.OpenAIAPIKey)
 	embeddingRepo := repository.NewEmbeddingRepository(env.EmbeddingServiceURL)
-	storageRepo := repository.NewStorageRepository(env.UploadDir, env.AppBaseURL)
+	storageRepo := repository.NewStorageRepository(env.UploadDir, env.AppBaseURL, env.UploadPublicPath)
 	mockService := service.NewMockService(mockRepo, openAIRepo, embeddingRepo, storageRepo)
 	mockController := controller.NewMockController(mockService, authService)
 
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
-	r.Static("/img", env.UploadDir)
+	r.Static(env.UploadPublicPath, env.UploadDir)
+	if env.UploadPublicPath != "/img" {
+		// Keep legacy public path for backward compatibility.
+		r.Static("/img", env.UploadDir)
+	}
+	if env.UploadPublicPath != "/uploads/img" {
+		// Support direct access by legacy/manual path.
+		r.Static("/uploads/img", env.UploadDir)
+	}
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
