@@ -29,7 +29,7 @@ func main() {
 
 	mockRepo := repository.NewMockRepository(clients)
 	openAIRepo := repository.NewOpenAIRepository(env.OpenAIAPIKey)
-	embeddingRepo := repository.NewEmbeddingRepository(env.EmbeddingServiceURL)
+	embeddingRepo := repository.NewEmbeddingRepository(env.MSMultilingualURL)
 	storageRepo := repository.NewStorageRepository(env.UploadDir, env.AppBaseURL, env.UploadPublicPath)
 	mockService := service.NewMockService(mockRepo, openAIRepo, embeddingRepo, storageRepo)
 	mockController := controller.NewMockController(mockService, authService)

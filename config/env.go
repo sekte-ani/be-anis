@@ -10,8 +10,8 @@ type Env struct {
 	SupabaseURL        string
 	SupabaseAnonKey    string
 	SupabaseServiceKey string
-	OpenAIAPIKey       string
-	EmbeddingServiceURL string
+	OpenAIAPIKey        string
+	MSMultilingualURL   string
 	AppBaseURL         string
 	UploadDir          string
 	UploadPublicPath   string
@@ -25,8 +25,8 @@ func LoadEnv() (*Env, error) {
 		SupabaseURL:         os.Getenv("SUPABASE_URL"),
 		SupabaseAnonKey:     os.Getenv("SUPABASE_ANON_KEY"),
 		SupabaseServiceKey:  os.Getenv("SUPABASE_SERVICE_KEY"),
-		OpenAIAPIKey:        os.Getenv("OPENAI_API_KEY"),
-		EmbeddingServiceURL: getEnvOrDefault("EMBEDDING_SERVICE_URL", "http://localhost:8000"),
+		OpenAIAPIKey:      os.Getenv("OPENAI_API_KEY"),
+		MSMultilingualURL: getEnvOrDefault("MS_MULTILINGUAL_URL", "http://212.85.24.186:5590"),
 		AppBaseURL:          getEnvOrDefault("APP_BASE_URL", "https://anismockup.anitech.id"),
 		UploadDir:           getEnvOrDefault("UPLOAD_DIR", "./uploads/img"),
 		UploadPublicPath:    getEnvOrDefault("UPLOAD_PUBLIC_PATH", "/img"),

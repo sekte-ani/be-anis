@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"mime/multipart"
 	"strings"
 
@@ -59,7 +60,7 @@ func (s *mockService) Create(req model.CreateMockRequest) (*model.Mock, error) {
 		"sektor":     req.Sektor,
 		"keywords":   req.Keywords,
 		"path_image": req.PathImage,
-		"embedding":  vector,
+		"embedding":  vectorToString(vector),
 	}
 
 	return s.mockRepo.Create(payload)
@@ -86,7 +87,7 @@ func (s *mockService) Update(mockID string, req model.UpdateMockRequest) (*model
 		if err != nil {
 			return nil, err
 		}
-		payload["embedding"] = vector
+		payload["embedding"] = vectorToString(vector)
 	}
 
 	return s.mockRepo.Update(mockID, payload)
@@ -94,6 +95,16 @@ func (s *mockService) Update(mockID string, req model.UpdateMockRequest) (*model
 
 func (s *mockService) Delete(mockID string) error {
 	return s.mockRepo.Delete(mockID)
+}
+
+// vectorToString converts []float64 to pgvector string format "[x,y,z]".
+// PostgREST requires this format to cast into the vector column type.
+func vectorToString(v []float64) string {
+	parts := make([]string, len(v))
+	for i, f := range v {
+		parts[i] = fmt.Sprintf("%g", f)
+	}
+	return "[" + strings.Join(parts, ",") + "]"
 }
 
 func (s *mockService) UploadImage(file *multipart.FileHeader) (string, error) {
