@@ -9,7 +9,7 @@ type Mock struct {
 	Sektor    string    `json:"sektor"`
 	Keywords  string    `json:"keywords"`
 	PathImage string    `json:"path_image"`
-	Embedding []float64 `json:"embedding,omitempty"`
+	Embedding Vector    `json:"embedding,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
