@@ -3,10 +3,11 @@ package helper
 import "github.com/gin-gonic/gin"
 
 type Response struct {
-	Success bool        `json:"success"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data,omitempty"`
-	Error   string      `json:"error,omitempty"`
+	Success   bool        `json:"success"`
+	Message   string      `json:"message"`
+	Data      interface{} `json:"data,omitempty"`
+	Error     string      `json:"error,omitempty"`
+	Paginator interface{} `json:"paginator,omitempty"`
 }
 
 func OK(c *gin.Context, status int, message string, data interface{}) {
@@ -14,6 +15,15 @@ func OK(c *gin.Context, status int, message string, data interface{}) {
 		Success: true,
 		Message: message,
 		Data:    data,
+	})
+}
+
+func OKPaginated(c *gin.Context, status int, message string, data interface{}, paginator interface{}) {
+	c.JSON(status, Response{
+		Success:   true,
+		Message:   message,
+		Data:      data,
+		Paginator: paginator,
 	})
 }
 

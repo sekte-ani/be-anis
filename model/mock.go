@@ -16,6 +16,8 @@ type Mock struct {
 type ListMocksQuery struct {
 	Sektor string `form:"sektor"`
 	Search string `form:"search"`
+	Page   int    `form:"page"`
+	Limit  int    `form:"limit"`
 }
 
 type CreateMockRequest struct {

@@ -15,7 +15,7 @@ import (
 const mockTable = "anis_mock"
 
 type MockRepository interface {
-	List(sektor, search string) ([]model.Mock, error)
+	List(sektor, search string, limit, offset int) ([]model.Mock, int64, error)
 	GetByMockID(mockID string) (*model.Mock, error)
 	Create(payload map[string]interface{}) (*model.Mock, error)
 	Update(mockID string, payload map[string]interface{}) (*model.Mock, error)
@@ -37,7 +37,7 @@ func (r *mockRepository) client() *supabase.Client {
 	return r.clients.Public
 }
 
-func (r *mockRepository) List(sektor, search string) ([]model.Mock, error) {
+func (r *mockRepository) List(sektor, search string, limit, offset int) ([]model.Mock, int64, error) {
 	query := r.client().From(mockTable).Select("*", "exact", false)
 
 	if sektor != "" {
@@ -51,12 +51,14 @@ func (r *mockRepository) List(sektor, search string) ([]model.Mock, error) {
 	}
 
 	query = query.Order("created_at", &postgrest.OrderOpts{Ascending: false})
+	query = query.Range(offset, offset+limit-1, "")
 
 	var mocks []model.Mock
-	if _, err := query.ExecuteTo(&mocks); err != nil {
-		return nil, err
+	totalRecords, err := query.ExecuteTo(&mocks)
+	if err != nil {
+		return nil, 0, err
 	}
-	return mocks, nil
+	return mocks, totalRecords, nil
 }
 
 func (r *mockRepository) GetByMockID(mockID string) (*model.Mock, error) {

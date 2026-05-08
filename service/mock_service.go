@@ -10,7 +10,7 @@ import (
 )
 
 type MockService interface {
-	List(query model.ListMocksQuery) ([]model.Mock, error)
+	List(query model.ListMocksQuery) ([]model.Mock, *model.Paginator, error)
 	Get(mockID string) (*model.Mock, error)
 	Create(req model.CreateMockRequest) (*model.Mock, error)
 	Update(mockID string, req model.UpdateMockRequest) (*model.Mock, error)
@@ -40,8 +40,24 @@ func NewMockService(
 	}
 }
 
-func (s *mockService) List(query model.ListMocksQuery) ([]model.Mock, error) {
-	return s.mockRepo.List(strings.TrimSpace(query.Sektor), strings.TrimSpace(query.Search))
+func (s *mockService) List(query model.ListMocksQuery) ([]model.Mock, *model.Paginator, error) {
+	page := query.Page
+	if page < 1 {
+		page = 1
+	}
+	limit := query.Limit
+	if limit < 1 {
+		limit = 20
+	}
+	offset := (page - 1) * limit
+
+	mocks, totalRecords, err := s.mockRepo.List(strings.TrimSpace(query.Sektor), strings.TrimSpace(query.Search), limit, offset)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	paginator := model.NewPaginator(page, limit, totalRecords)
+	return mocks, paginator, nil
 }
 
 func (s *mockService) Get(mockID string) (*model.Mock, error) {

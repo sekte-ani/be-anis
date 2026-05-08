@@ -43,12 +43,12 @@ func (h *MockController) List(c *gin.Context) {
 		helper.Err(c, http.StatusBadRequest, "invalid query params", err)
 		return
 	}
-	mocks, err := h.mockService.List(query)
+	mocks, paginator, err := h.mockService.List(query)
 	if err != nil {
 		helper.Err(c, http.StatusInternalServerError, "failed to list mocks", err)
 		return
 	}
-	helper.OK(c, http.StatusOK, "list mocks success", mocks)
+	helper.OKPaginated(c, http.StatusOK, "list mocks success", mocks, paginator)
 }
 
 func (h *MockController) Get(c *gin.Context) {
