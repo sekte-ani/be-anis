@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	ollamaModel = "llama3.1:8b"
+	ollamaModel = "llama3.2:1b"
 
 	recommendFeatureSystemPrompt = `Kamu adalah konsultan IT dari software house Indonesia bernama A.N.I Tech.
 Tugasmu adalah memberikan rekomendasi fitur website yang relevan, praktis,
