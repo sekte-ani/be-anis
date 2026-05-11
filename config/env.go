@@ -12,7 +12,6 @@ type Env struct {
 	SupabaseServiceKey string
 	OpenAIAPIKey       string
 	GroqAPIKey         string
-	OllamaURL          string
 	DatabaseURL        string
 	MSMultilingualURL  string
 	AppBaseURL         string
@@ -30,7 +29,6 @@ func LoadEnv() (*Env, error) {
 		SupabaseServiceKey: os.Getenv("SUPABASE_SERVICE_KEY"),
 		OpenAIAPIKey:       os.Getenv("OPENAI_API_KEY"),
 		GroqAPIKey:         os.Getenv("GROQ_API_KEY"),
-		OllamaURL:          getEnvOrDefault("OLLAMA_URL", "http://localhost:11434"),
 		DatabaseURL:        os.Getenv("DATABASE_URL"),
 		MSMultilingualURL:  getEnvOrDefault("MS_MULTILINGUAL_URL", "http://212.85.24.186:5590"),
 		AppBaseURL:         getEnvOrDefault("APP_BASE_URL", "https://anismockup.anitech.id"),

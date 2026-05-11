@@ -20,9 +20,6 @@ func main() {
 	if env.GroqAPIKey == "" {
 		log.Fatal("failed to init recommend endpoint: GROQ_API_KEY is required")
 	}
-	if env.OllamaURL == "" {
-		log.Fatal("failed to init recommend endpoint: OLLAMA_URL is required")
-	}
 	if env.DatabaseURL == "" {
 		log.Fatal("failed to init recommend endpoint: DATABASE_URL is required")
 	}
@@ -45,9 +42,8 @@ func main() {
 
 	recommendRepo := repository.NewRecommendRepository(env.DatabaseURL)
 	groqRepo := repository.NewGroqRepository(env.GroqAPIKey)
-	ollamaRepo := repository.NewOllamaRepository(env.OllamaURL)
 	recommendEmbeddingRepo := repository.NewEmbeddingRepository(env.MSMultilingualURL)
-	recommendService := service.NewRecommendService(recommendRepo, groqRepo, ollamaRepo, recommendEmbeddingRepo)
+	recommendService := service.NewRecommendService(recommendRepo, groqRepo, recommendEmbeddingRepo)
 	recommendController := controller.NewRecommendController(recommendService)
 
 	r := gin.Default()

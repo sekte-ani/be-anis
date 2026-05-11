@@ -19,20 +19,17 @@ type RecommendService interface {
 type recommendService struct {
 	recommendRepo repository.RecommendRepository
 	groqRepo      repository.GroqRepository
-	ollamaRepo    repository.OllamaRepository
 	embeddingRepo repository.EmbeddingRepository
 }
 
 func NewRecommendService(
 	recommendRepo repository.RecommendRepository,
 	groqRepo repository.GroqRepository,
-	ollamaRepo repository.OllamaRepository,
 	embeddingRepo repository.EmbeddingRepository,
 ) RecommendService {
 	return &recommendService{
 		recommendRepo: recommendRepo,
 		groqRepo:      groqRepo,
-		ollamaRepo:    ollamaRepo,
 		embeddingRepo: embeddingRepo,
 	}
 }
@@ -45,8 +42,8 @@ func (s *recommendService) Recommend(req model.RecommendRequest) (model.Recommen
 	startedAt := time.Now()
 
 	log.Printf(
-		"[recommend][service] started input_chars=%d groq_model=%s ollama_model=%s",
-		len([]rune(input)), repository.GroqModelName(), repository.OllamaModelName(),
+		"[recommend][service] started input_chars=%d classify_model=%s feature_model=%s",
+		len([]rune(input)), repository.GroqModelName(), repository.GroqModelName(),
 	)
 
 	var (
@@ -107,7 +104,7 @@ func (s *recommendService) Recommend(req model.RecommendRequest) (model.Recommen
 	go func() {
 		defer wg.Done()
 		log.Printf("[recommend][service] feature_generation_started")
-		features, err := s.ollamaRepo.GenerateWebsiteFeatures(input)
+		features, err := s.groqRepo.GenerateWebsiteFeatures(input)
 		if err != nil {
 			setErr(fmt.Errorf("failed to generate website features: %w", err))
 			return
