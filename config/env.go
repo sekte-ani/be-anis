@@ -10,8 +10,11 @@ type Env struct {
 	SupabaseURL        string
 	SupabaseAnonKey    string
 	SupabaseServiceKey string
-	OpenAIAPIKey        string
-	MSMultilingualURL   string
+	OpenAIAPIKey       string
+	GroqAPIKey         string
+	OllamaURL          string
+	DatabaseURL        string
+	MSMultilingualURL  string
 	AppBaseURL         string
 	UploadDir          string
 	UploadPublicPath   string
@@ -22,15 +25,18 @@ func LoadEnv() (*Env, error) {
 	_ = loadDotEnv(".env")
 
 	env := &Env{
-		SupabaseURL:         os.Getenv("SUPABASE_URL"),
-		SupabaseAnonKey:     os.Getenv("SUPABASE_ANON_KEY"),
-		SupabaseServiceKey:  os.Getenv("SUPABASE_SERVICE_KEY"),
-		OpenAIAPIKey:      os.Getenv("OPENAI_API_KEY"),
-		MSMultilingualURL: getEnvOrDefault("MS_MULTILINGUAL_URL", "http://212.85.24.186:5590"),
-		AppBaseURL:          getEnvOrDefault("APP_BASE_URL", "https://anismockup.anitech.id"),
-		UploadDir:           getEnvOrDefault("UPLOAD_DIR", "./uploads/img"),
-		UploadPublicPath:    getEnvOrDefault("UPLOAD_PUBLIC_PATH", "/img"),
-		Port:                getEnvOrDefault("PORT", "5589"),
+		SupabaseURL:        os.Getenv("SUPABASE_URL"),
+		SupabaseAnonKey:    os.Getenv("SUPABASE_ANON_KEY"),
+		SupabaseServiceKey: os.Getenv("SUPABASE_SERVICE_KEY"),
+		OpenAIAPIKey:       os.Getenv("OPENAI_API_KEY"),
+		GroqAPIKey:         os.Getenv("GROQ_API_KEY"),
+		OllamaURL:          getEnvOrDefault("OLLAMA_URL", "http://localhost:11434"),
+		DatabaseURL:        os.Getenv("DATABASE_URL"),
+		MSMultilingualURL:  getEnvOrDefault("MS_MULTILINGUAL_URL", "http://212.85.24.186:5590"),
+		AppBaseURL:         getEnvOrDefault("APP_BASE_URL", "https://anismockup.anitech.id"),
+		UploadDir:          getEnvOrDefault("UPLOAD_DIR", "./uploads/img"),
+		UploadPublicPath:   getEnvOrDefault("UPLOAD_PUBLIC_PATH", "/img"),
+		Port:               getEnvOrDefault("PORT", "5589"),
 	}
 
 	return env, nil

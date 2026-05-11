@@ -17,6 +17,15 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to load env: %v", err)
 	}
+	if env.GroqAPIKey == "" {
+		log.Fatal("failed to init recommend endpoint: GROQ_API_KEY is required")
+	}
+	if env.OllamaURL == "" {
+		log.Fatal("failed to init recommend endpoint: OLLAMA_URL is required")
+	}
+	if env.DatabaseURL == "" {
+		log.Fatal("failed to init recommend endpoint: DATABASE_URL is required")
+	}
 
 	clients, err := config.NewSupabaseClients(env)
 	if err != nil {
@@ -33,6 +42,13 @@ func main() {
 	storageRepo := repository.NewStorageRepository(env.UploadDir, env.AppBaseURL, env.UploadPublicPath)
 	mockService := service.NewMockService(mockRepo, openAIRepo, embeddingRepo, storageRepo)
 	mockController := controller.NewMockController(mockService, authService)
+
+	recommendRepo := repository.NewRecommendRepository(env.DatabaseURL)
+	groqRepo := repository.NewGroqRepository(env.GroqAPIKey)
+	ollamaRepo := repository.NewOllamaRepository(env.OllamaURL)
+	recommendEmbeddingRepo := repository.NewEmbeddingRepository(env.MSMultilingualURL)
+	recommendService := service.NewRecommendService(recommendRepo, groqRepo, ollamaRepo, recommendEmbeddingRepo)
+	recommendController := controller.NewRecommendController(recommendService)
 
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
@@ -51,6 +67,7 @@ func main() {
 
 	authController.RegisterRoutes(r)
 	mockController.RegisterRoutes(r)
+	recommendController.RegisterRoutes(r)
 
 	log.Printf("server listening on :%s", env.Port)
 	if err := r.Run(":" + env.Port); err != nil {
